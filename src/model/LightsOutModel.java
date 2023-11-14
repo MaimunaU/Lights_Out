@@ -141,8 +141,8 @@ public class LightsOutModel implements Iterable<Tile>{
      */
    public void toggleTile(int x, int y){
        board.toggleTile(x,y);
-       //TODO increment moves
-       //TODO call announce() with a message with the (x,y) coordinate of the tile that was changed.
+       moves ++;
+       announce("(" + x + "," + y + ") has changed");
    }
 
     /**

@@ -10,9 +10,13 @@ import javafx.stage.Stage;
 import model.LightsOutModel;
 import model.Observer;
 import model.Tile;
-
 import java.io.File;
 
+/**
+ * A graphic user interface for Lights Out
+ *
+ * @author Maimuna Ullah (mnu2234)
+ */
 public class LightOutGUI extends Application implements Observer<LightsOutModel, String> {
     private LightsOutModel model;
     private Label moves  = new Label("Moves: 0");
@@ -25,6 +29,7 @@ public class LightOutGUI extends Application implements Observer<LightsOutModel,
         border.setPrefHeight(500);
         border.setPrefWidth(500);
 
+        //Creates and sets the top pane where the moves and message is shown
         FlowPane topPane = new FlowPane();
         topPane.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         topPane.getChildren().add(moves);
@@ -32,18 +37,21 @@ public class LightOutGUI extends Application implements Observer<LightsOutModel,
         topPane.setHgap(5);
         border.setTop(topPane);
 
+        //Creates and sets the center pane of a grid of buttons representing lights
         Pane mainPane = this.makeButtonPane();
         mainPane.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         border.setCenter(mainPane);
 
-        Pane pane = new HBox();
+        //Creates and sets the bottom pane of the three action buttons
+        Pane bottomPane = new HBox();
         Button newGame = new Button ("New Game");
         Button loadGame = new Button ("Load Game");
         Button hint = new Button ("Hint");
-        pane.getChildren().add(newGame);
-        pane.getChildren().add(loadGame);
-        pane.getChildren().add(hint);
+        bottomPane.getChildren().add(newGame);
+        bottomPane.getChildren().add(loadGame);
+        bottomPane.getChildren().add(hint);
         newGame.setOnAction(event -> model.generateRandomBoard());
+        //Allows the user to choose their own file
         loadGame.setOnAction(event -> {
                     FileChooser fileChooser = new FileChooser();
                     fileChooser.setTitle("Load a game board.");
@@ -52,8 +60,8 @@ public class LightOutGUI extends Application implements Observer<LightsOutModel,
                     model.loadBoardFromFile(selectedFile);
                 });
         hint.setOnAction(event -> model.getHint());
-        pane.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        border.setBottom(pane);
+        bottomPane.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        border.setBottom(bottomPane);
 
         stage.setTitle("Lights Out");
         stage.setScene(new Scene(border));
@@ -61,8 +69,11 @@ public class LightOutGUI extends Application implements Observer<LightsOutModel,
         stage.show();
     }
 
+    /**
+     * Creates a 5x5 grid of buttons representing the lights
+     * @return a button grid pane
+     */
     private Pane makeButtonPane() {
-
         GridPane grid = new GridPane();
         for (int row = 0; row < 5; row++) {
             for (int col = 0; col < 5; col++) {
@@ -81,6 +92,10 @@ public class LightOutGUI extends Application implements Observer<LightsOutModel,
         return grid;
     }
 
+    /**
+     * Creates a model and adds a view to the model
+     * @throws Exception
+     */
     @Override
     public void init() throws Exception {
         System.out.println("init: Initialize and connect to model!");
@@ -92,6 +107,14 @@ public class LightOutGUI extends Application implements Observer<LightsOutModel,
         Application.launch(args);
     }
 
+    /**
+     * Updates the grid of lights after each move.
+     * Also updates the number of moves made and the message for different situations.
+     * @param model the object that wishes to inform this object
+     *                about something that has happened.
+     * @param msg optional data the server.model can send to the observer
+     *
+     */
     @Override
     public void update(LightsOutModel model, String msg) {
         for (int row = 0; row < 5; row++) {

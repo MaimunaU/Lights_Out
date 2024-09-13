@@ -3,6 +3,7 @@
 Class assignment 8.
 
 How the game works:
+
   Three ways to start:
     1. Click any square upon starting the program
     2. Click "New Game"
